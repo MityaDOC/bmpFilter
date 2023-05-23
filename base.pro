@@ -1,4 +1,5 @@
 QT -= gui
+QT += widgets
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -8,7 +9,8 @@ CONFIG -= app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+        mainFunc.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -21,3 +23,6 @@ INCLUDEPATH += "C:\Program Files (x86)\Intel\oneAPI\ipp\latest\include"
 
 LIBS += -lUser32
 LIBS  += -L"C:\Program Files (x86)\Intel\oneAPI\ipp\latest\lib\intel64" -lippdcmt -lippcvmt -lippimt -lippccmt -lippvmmt -lippsmt -lippcoremt
+
+HEADERS += \
+    mainFunc.h
