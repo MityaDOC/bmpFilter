@@ -9,43 +9,80 @@
 #include <QDateTime>
 #include <QElapsedTimer>
 #include <QFileSystemWatcher>
+#include <QTextStream>
+#include <QTextEdit>
+#include <iostream>
+#include <QCoreApplication>
 #include "ipp.h"
+#include "windows.h"
 
 
 mainFunc::mainFunc()
 {
+
     //------------ preparation -----------------
 
     QString dirnameIN  = "C:/Progs/bmpFilter/IN";           // !Введите адрес рабочей папки!
     QDir dirIN(dirnameIN);
+    QString dirAbsName = "C:/Progs/bmpFilter";              // !Введите адрес родительской директории рабочей папки!
     if(!dirIN.exists())
     {
         qCritical() << "Отсутсвует входная папка!";
-        return;
+        qCritical() << "Введите путь к папке в формате: C:/Windows/Example...";
+        //return;
+        QString input;
+        QTextStream cin(stdin);
+        input = cin.readLine();
+        dirIN.setPath(input);
+        dirnameIN = input;
+
+        if(!QDir(input).exists())
+        {
+            qCritical() << " Неверный путь или формат ввода! Дальнейшее выполнение программы невозможно!";
+            return;
+        }
+        QDir dirHelper(input);
+        QString dirHelperUp = dirHelper.absolutePath();
+        if(dirHelper.cdUp())
+        {
+            dirHelperUp = dirHelper.absolutePath();
+        } else
+        {
+            qCritical() << " Ошибка инициализации! Дальнейшее выполнение программы невозможно!";
+            return;
+        }
+
+        dirAbsName = dirHelperUp; // путь к родительской директории входного файла для дальнейшего создания необходимых папок
     }
-    QString dirnameOUT = "C:/Progs/bmpFilter/OUT";          // Введите адрес папки для обработанных файлов
+
+    QString dirnameOUT = dirAbsName + "/OUT";          // Введите адрес папки для обработанных файлов
     QDir dirOUT(dirnameOUT);
     if(!dirOUT.exists())
     {
         dirOUT.mkdir(dirnameOUT);
     }
-    QString dirnameDONE = "C:/Progs/bmpFilter/processed";   // Введите адрес папки для исходных файлов
+    QString dirnameDONE = dirAbsName + "/processed";   // Введите адрес папки для исходных файлов
     QDir dirDONE(dirnameDONE);
     if(!dirDONE.exists())
     {
         dirDONE.mkdir(dirnameDONE);
     }
-    QFile fileLOG("C:/Progs/bmpFilter/log.txt");            // Введите адрес файла для логов
+    QFile fileLOG( dirAbsName + "/log.txt");            // Введите адрес файла для логов
     if(!fileLOG.exists())
     {
         fileLOG.open(QIODevice::WriteOnly | QIODevice::Append);
+    } else {
+        fileLOG.open(QIODevice::WriteOnly | QIODevice::Append);           // ???Дописывать ли в файл при повторном запуске программы или обнулять его и заполнять по новой???
     }
-    QFile fileMETRICS("C:/Progs/bmpFilter/metrics.txt");    // Введите адрес папки для метрик
+    QFile fileMETRICS( dirAbsName + "/metrics.txt");    // Введите адрес папки для метрик
     if(!fileMETRICS.exists())
     {
         fileMETRICS.open(QIODevice::WriteOnly | QIODevice::Append);
+    } else {
+        fileMETRICS.open(QIODevice::WriteOnly | QIODevice::Append);       // ???Дописывать ли в файл при повторном запуске программы или обнулять его и заполнять по новой???
     }
 
+    qDebug() << "Processing ... " << endl << endl;
     //---------------------------------------------
 
     int numFiles = 0;
@@ -157,7 +194,7 @@ mainFunc::mainFunc()
     }
 
 
-    // Malloc free and closing files
+    // Malloc free and closing files if it will be necessary
 
     fileLOG.close();
     fileMETRICS.close();
