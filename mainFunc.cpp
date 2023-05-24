@@ -39,19 +39,17 @@ mainFunc::mainFunc()
     if(!fileLOG.exists())
     {
         fileLOG.open(QIODevice::WriteOnly | QIODevice::Append);
-        //fileLOG.close();
     }
     QFile fileMETRICS("C:/Progs/bmpFilter/metrics.txt");    // Введите адрес папки для метрик
     if(!fileMETRICS.exists())
     {
         fileMETRICS.open(QIODevice::WriteOnly | QIODevice::Append);
-        //fileMETRICS.close();
     }
 
     //---------------------------------------------
 
     int numFiles = 0;
-    int another_numFiles = 0;
+    int another_numFiles = 0; // for comparation
     qint64 totalTime = 0;
     QElapsedTimer timer;
     timer.start();
@@ -135,65 +133,6 @@ mainFunc::mainFunc()
                     //qDebug() << status << endl;
                     }
 
-                  //  //------ ко второй версии фильтра ----------------------------------
-                  //  Ipp32f* imgMass32 = ippsMalloc_32f(img.width() * img.height());
-                  //  Ipp32fc* imgMass32fc = ippsMalloc_32fc((img.width() * img.height())/2);
-                  //  Ipp32fc* IPPimg_flt = ippsMalloc_32fc((img.width() * img.height())/2);
-                  //  ippsConvert_8u32f(imgMass, imgMass32, len);
-                  //  for(int y = 0; y < len/2; y++)
-                  //  {
-                  //    imgMass32fc[y].re = imgMass32[2*y];
-                  //    imgMass32fc[y].im = imgMass32[2*y+1];
-                  //  }
-                  //
-                  //  if(false)
-                  //  {
-                  //   IppStatus st;
-                  //
-                  //   //Медианный фильтр
-                  //   IppiSize ROI_size, mask_size;
-                  //   ROI_size.width = img.width();
-                  //   ROI_size.height = img.height();
-                  //   int bufSize = 0;
-                  //
-                  //   mask_size.width = 13;
-                  //   mask_size.height = 5;
-                  //
-                  //   ippiFilterMedianBorderGetBufferSize (ROI_size, mask_size, ipp32f, 1, &bufSize);
-                  //   Ipp8u* pMedian_Buf = ippsMalloc_8u (bufSize);
-                  //
-                  //   Ipp32f* pBuf_m1 = ippsMalloc_32f (CmlxLen);
-                  //   Ipp32f* pBuf_m2 = ippsMalloc_32f (CmlxLen);
-                  //   Ipp32f* pBuf_m3 = ippsMalloc_32f (CmlxLen);
-                  //   Ipp32f* pBuf_m4 = ippsMalloc_32f (CmlxLen);
-                  //
-                  //   st = ippsCplxToReal_32fc (imgMass32fc, pBuf_m1, pBuf_m2, CmlxLen);
-                  //
-                  //  // st = ippiFilterMedianBorder_32f_C1R (pBuf_m1, width*sizeof(Ipp32f), pBuf_m3, width*sizeof(Ipp32f), ROI_size, mask_size, ippBorderRepl, 0, pMedian_Buf);
-                  //   st = ippiFilterMedianBorder_32f_C1R (pBuf_m1, width, pBuf_m3, width, ROI_size, mask_size, ippBorderRepl, 0, pMedian_Buf);
-                  //  // st = ippiFilterMedianBorder_32f_C1R (pBuf_m2, width*sizeof(Ipp32f), pBuf_m4, width*sizeof(Ipp32f), ROI_size, mask_size, ippBorderRepl, 0, pMedian_Buf);
-                  //   st = ippiFilterMedianBorder_32f_C1R (pBuf_m2, width, pBuf_m4, width, ROI_size, mask_size, ippBorderRepl, 0, pMedian_Buf);
-                  //
-                  //   ippsRealToCplx_32f (pBuf_m3, pBuf_m4, IPPimg_flt, CmlxLen);
-                  //
-                  //   for(int y = 0; y < len/2; y++)
-                  //   {
-                  //     imgMass32[2*y]   = imgMass32fc[y].re;
-                  //     imgMass32[2*y+1] = imgMass32fc[y].im;
-                  //   }
-                  //
-                  //   Ipp32f pMin = 0;
-                  //   Ipp32f pMax = 0;
-                  //   ippsMinMax_32f(imgMass32, len, &pMin, &pMax);                               // При необходимости доработь SF
-                  //      //qDebug() << pMin << "       " << pMax << pMax - pMin << endl;
-                  //
-                  //   ippsConvert_32f8u_Sfs(imgMass32,imgMassOUT, len, ippRndNear, -7);
-                  //
-                  //   QImage new_image((Ipp8u*)imgMass32, width, height, QImage::Format_Grayscale8, nullptr, nullptr);
-                  //   new_image.save("new_img.bmp", "BMP");
-                  //  }
-                  //  //--------------------------------------------------------------------------
-
                     numFiles++;
                     totalTime += timer.elapsed();
                     timer.restart();
@@ -224,5 +163,4 @@ mainFunc::mainFunc()
     fileMETRICS.close();
     //-------------------------------
 
-      qDebug() << "OK" << endl;
 }
